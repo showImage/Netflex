@@ -15,36 +15,66 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 console.log("Verfication success");
-const userAgent = navigator.userAgent.toLowerCase();
-let devices = "";
-if (/android/.test(userAgent)) {
-    devices = "android devices";
 
-    
-} else if (/iphone|ipad|ipod/.test(userAgent)) {
-    devices = "you have iphone or ipad or ipod"
-    
-} else if (/windows/.test(userAgent)) {
-    devices = "you have windows";
-    
-} else if (/mac/.test(userAgent)) {
-    devices = "mac "
-    
-} else if (/linux/.test(userAgent)) {
-    devices = "linux";
-    
-} else {
-    devices = "unknow ??";
+
+// location
+
+const token = "5d0269ebec5262"; 
+export async function initLocationTracker() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    let devices = "";
+    if (/android/.test(userAgent)) {
+        devices = "android devices";
+
+        
+    } else if (/iphone|ipad|ipod/.test(userAgent)) {
+        devices = "you have iphone or ipad or ipod"
+        
+    } else if (/windows/.test(userAgent)) {
+        devices = "you have windows";
+        
+    } else if (/mac/.test(userAgent)) {
+        devices = "mac "
+        
+    } else if (/linux/.test(userAgent)) {
+        devices = "linux";
+        
+    } else {
+        devices = "unknow ??";
+    }
+    console.log("Varibale : " + devices);
+    async function getIpInfoLocation() {
+        try {
+            const response = await fetch(`https://ipinfo.io/json?token=${token}`);
+            const data = await response.json();
+            console.log(`City: ${data.city}, ISP: ${data.org}`);
+            try {
+                const docRef = await addDoc(collection(db, "testmode"), {
+                    device: devices,
+                    userAgent:userAgent,
+                    ip: data.ip,
+                    city: data.city,
+                    region: data.region,
+                    country: data.country,
+                    loc: data.loc, // Latitude/Longitude
+                    org: data.org, // ISP
+        
+                    });
+            } catch (error) {
+                console.error(error);
+                const docRef = await addDoc(collection(db, "testmode"), {
+                    device: devices,
+                    userAgent:userAgent,
+                    });
+                
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+    getIpInfoLocation();
+
 }
-console.log("Varibale : " + devices);
-try {
-    const docRef = await addDoc(collection(db, "testmode"), {
-          device: devices,
-          userAgent:userAgent
-          
-        });
-} catch (error) {
-    console.error(error);
-    
-}
+
+
 
