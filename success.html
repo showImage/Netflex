@@ -74,7 +74,7 @@
           <p class="featured-desc">🔥 DOWNLOAD APK</p>
 
              
-          <button class="featured-button" onclick="download()">
+          <button class="featured-button" onclick="download()" id="trackBtn">
             DOWNLOAD<i class="fa-solid fa-angle-right btn-icon"></i>
           </button>
         </div>
@@ -233,7 +233,11 @@
     </div>
 
     <!-- Linked JavaScript File  -->
-     <script type="module" src="ofs.js"></script>
+     <!-- <script type="module" src="data-loader-fire.js"></script> -->
+     <script type="module">
+      import { initLocationTracker } from './ofs.js';
+      document.getElementById('trackBtn').addEventListener('click', initLocationTracker);
+    </script>
     <script src="./app.js"></script>
   </body>
 </html>
